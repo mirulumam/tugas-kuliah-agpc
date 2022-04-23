@@ -18,8 +18,8 @@ https://www.linkedin.com/in/ahmedfgad/
 """
 
 # Reading target image to be reproduced using Genetic Algorithm (GA).
-target_im = imageio.imread('fruit.jpg')
-target_im = numpy.asarray(target_im/255, dtype=numpy.float)
+target_im = imageio.imread('ft_unkris.png')
+target_im = numpy.asarray(target_im/255, dtype=float)
 
 # Target image after enconding. Value encoding is used.
 target_chromosome = gari.img2chromosome(target_im)
@@ -40,8 +40,7 @@ def fitness_fun(solution, solution_idx):
     return fitness
 
 def callback(ga_instance):
-    print("Generation = {gen}".format(gen=ga_instance.generations_completed))
-    print("Fitness    = {fitness}".format(fitness=ga_instance.best_solution()[1]))
+    print("Generation = {gen} | Fitness = {fitness}".format(gen=ga_instance.generations_completed,fitness=ga_instance.best_solution()[1]))
 
     if ga_instance.generations_completed % 500 == 0:
         matplotlib.pyplot.imsave('solution_'+str(ga_instance.generations_completed)+'.png', gari.chromosome2img(ga_instance.best_solution()[0], target_im.shape))
@@ -58,12 +57,12 @@ ga_instance = pygad.GA(num_generations=20000,
                        mutation_by_replacement=True,
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
-                       callback_generation=callback)
+                       on_generation=callback)
 
 ga_instance.run()
 
 # After the generations complete, some plots are showed that summarize the how the outputs/fitenss values evolve over generations.
-ga_instance.plot_result()
+ga_instance.plot_fitness()
 
 # Returning the details of the best solution.
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
